@@ -34,7 +34,15 @@
 #ifndef TEMPLATE_TEMPLATE_CACHE_H_
 #define TEMPLATE_TEMPLATE_CACHE_H_
 
+#ifdef _MSC_VER
+#if _MSC_VER >= 1500
+#include <unordered_map> // for std::unordered_map<>
+#else
 #include <hash_map>      // for stdext::hash_map<>
+#endif
+#else
+#include <hash_map>      // for stdext::hash_map<>
+#endif
 #include <string>        // for string
 #include <utility>       // for pair
 #include <vector>        // for vector<>
@@ -288,9 +296,25 @@ class CTEMPLATE_DLL_DECL TemplateCache {
  public:
   typedef std::pair<TemplateId, int> TemplateCacheKey;
  private:
+#ifdef _MSC_VER
+#if _MSC_VER > 1500
+  typedef std::unordered_map<TemplateCacheKey, CachedTemplate, TemplateCacheHash>
+    TemplateMap;
+  typedef std::unordered_map<RefcountedTemplate*, int, RefTplPtrHash> TemplateCallMap;
+#elif _MSC_VER == 1500
+  typedef std::tr1::unordered_map<TemplateCacheKey, CachedTemplate, TemplateCacheHash>
+    TemplateMap;
+  typedef std::tr1::unordered_map<RefcountedTemplate*, int, RefTplPtrHash> TemplateCallMap;
+#else
   typedef stdext::hash_map<TemplateCacheKey, CachedTemplate, TemplateCacheHash>
     TemplateMap;
   typedef stdext::hash_map<RefcountedTemplate*, int, RefTplPtrHash> TemplateCallMap;
+#endif
+#else
+  typedef stdext::hash_map<TemplateCacheKey, CachedTemplate, TemplateCacheHash>
+    TemplateMap;
+  typedef stdext::hash_map<RefcountedTemplate*, int, RefTplPtrHash> TemplateCallMap;
+#endif
   // Where to search for files.
   typedef std::vector<std::string> TemplateSearchPath;
 

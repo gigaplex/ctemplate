@@ -40,7 +40,15 @@
 #define TEMPLATE_TEMPLATE_NAMELIST_H_
 
 #include <time.h>    // for time_t
+#ifdef _MSC_VER
+#if _MSC_VER >= 1500
+#include <unordered_set>
+#else
 #include <hash_set>
+#endif
+#else
+#include <hash_set>
+#endif
 #include <string>
 #include <vector>
 #include <ctemplate/template_enums.h>    // for Strip
@@ -87,7 +95,17 @@ class CTEMPLATE_DLL_DECL TemplateNamelist {
   // thing you should do with them is call size() and/or iterate
   // between begin() and end(), and the only operations we promise
   // the iterators will support are operator* and operator++.
+#ifdef _MSC_VER
+#if _MSC_VER > 1500
+  typedef std::unordered_set<std::string, StringHash> NameListType;
+#elif _MSC_VER == 1500
+  typedef std::tr1::unordered_set<std::string, StringHash> NameListType;
+#else
   typedef stdext::hash_set<std::string, StringHash> NameListType;
+#endif
+#else
+  typedef stdext::hash_set<std::string, StringHash> NameListType;
+#endif
   typedef std::vector<std::string> MissingListType;
   typedef std::vector<std::string> SyntaxListType;
 

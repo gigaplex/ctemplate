@@ -19,13 +19,27 @@
 #define GOOGLE_NAMESPACE  ctemplate
 
 /* the location of <unordered_map> or <hash_map> */
+#if _MSC_VER >= 1500
+#define HASH_MAP_H  <unordered_map>
+#else
 #define HASH_MAP_H  <hash_map>
+#endif
 
 /* the namespace of hash_map/hash_set */
+#if _MSC_VER > 1500
+#define HASH_NAMESPACE  std
+#elif _MSC_VER == 1500
+#define HASH_NAMESPACE  std::tr1
+#else
 #define HASH_NAMESPACE  stdext
+#endif
 
 /* the location of <unordered_set> or <hash_set> */
+#if _MSC_VER >= 1500
+#define HASH_SET_H  <unordered_set>
+#else
 #define HASH_SET_H  <hash_set>
+#endif
 
 /* Define to 1 if you have the <byteswap.h> header file. */
 #undef HAVE_BYTESWAP_H
@@ -124,7 +138,11 @@
 #undef HAVE_UNISTD_H
 
 /* define if the compiler supports unordered_{map,set} */
+#if _MSC_VER >= 1500
+#define HAVE_UNORDERED_MAP  1
+#else
 #undef HAVE_UNORDERED_MAP
+#endif
 
 /* Define to 1 if you have the <utime.h> header file. */
 #undef HAVE_UTIME_H
@@ -145,7 +163,7 @@
 #define HAVE___INT64  1
 
 /* The namespace to put the htmlparser code. */
-#define HTMLPARSER_NAMESPACE  google_ctemplate_streamhtmlparser
+#define HTMLPARSER_NAMESPACE  ctemplate_htmlparser
 
 /* define if first argument to InterlockedExchange is just LONG */
 #undef INTERLOCKED_EXCHANGE_NONVOLATILE

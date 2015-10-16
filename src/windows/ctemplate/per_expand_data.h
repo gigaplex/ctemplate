@@ -45,7 +45,15 @@
 #include <stdlib.h>   // for NULL
 #include <string.h>   // for strcmp
 #include <sys/types.h>
+#ifdef _MSC_VER
+#if _MSC_VER >= 1500
+#include <unordered_map>
+#else
 #include <hash_map>
+#endif
+#else
+#include <hash_map>
+#endif
 #include <ctemplate/template_string.h>   // for StringHash
 
 // NOTE: if you are statically linking the template library into your binary
@@ -131,7 +139,13 @@ class CTEMPLATE_DLL_DECL PerExpandData {
 
  private:
 #ifdef _MSC_VER
+#if _MSC_VER > 1500
+  typedef std::unordered_map<const char*, const void*, StringHash> DataMap;
+#elif _MSC_VER == 1500
+  typedef std::tr1::unordered_map<const char*, const void*, StringHash> DataMap;
+#else
   typedef stdext::hash_map<const char*, const void*, StringHash> DataMap;
+#endif
 #else
   struct DataEq {
     bool operator()(const char* s1, const char* s2) const;

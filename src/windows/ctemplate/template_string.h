@@ -34,7 +34,15 @@
 #define TEMPLATE_TEMPLATE_STRING_H_
 
 #include <string.h>      // for memcmp() and size_t
+#ifdef _MSC_VER
+#if _MSC_VER >= 1500
+#include <unordered_map>
+#else
 #include <hash_map>
+#endif
+#else
+#include <hash_map>
+#endif
 #include <string>
 #include <vector>
 
